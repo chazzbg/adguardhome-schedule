@@ -3,5 +3,7 @@
 </script>
 
 <template>
-  <div>asdasd</div>
+  <div class="container-fluid ">
+    <router-view></router-view>
+  </div>
 </template>

@@ -68,6 +68,10 @@
         "symfony/polyfill-php81": "*"
     },
     "scripts": {
+        "dev" : [
+            "Composer\\Config::disableProcessTimeout",
+            "bin/rr serve -c .rr.dev.yaml --debug "
+        ],
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"

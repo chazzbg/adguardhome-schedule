@@ -77,9 +77,15 @@ Encore
     .configureDefinePlugin((options) => {
 
         options.__VUE_OPTIONS_API__ = true;
-        options.__VUE_PROD_DEVTOOLS__ = true;
+        options.__VUE_PROD_DEVTOOLS__ = !Encore.isProduction();
     })
-
+    .configureDevServerOptions(options => {
+        options.server = {
+            options: {
+                stats: 'errors-only',
+            }
+        }
+    })
 ;
 
 module.exports = Encore.getWebpackConfig();

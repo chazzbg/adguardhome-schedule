@@ -21,7 +21,7 @@ class IndexController extends AbstractController
         $host->setHost('adguard.home.chazz.link')
             ->setSchema(SchemaEnum::HTTPS)
             ->setSkipSslVerify(false)
-            ->setUsername('chsazzbg')
+            ->setUsername('chazzbg')
             ->setPassword('1q2w3e4r');
 
         $client->setServer($host);
