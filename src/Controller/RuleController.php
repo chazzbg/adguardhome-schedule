@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-#[Route('/api/rule', name: 'api_rule_')]
+#[Route('/api/rule', name: 'api_rule_', priority: 10)]
 class RuleController extends AbstractController
 {
     #[Route('', name: 'index', methods: ['GET'])]
@@ -23,9 +23,13 @@ class RuleController extends AbstractController
         $servers = $registry->getRepository(Rule::class)->findAll();
 
         return $this->json($servers, 200, [], [
-//            AbstractNormalizer::IGNORED_ATTRIBUTES => ['username', 'password']
+            AbstractNormalizer::IGNORED_ATTRIBUTES => ['servers','traces'],
+            AbstractNormalizer::CALLBACKS => [
+                'time' => [$this,'convertTimeCallback'],
+            ],
         ]);
     }
+
 
     #[Route('', name: 'create  ', methods: ['POST'])]
     public function create(
@@ -114,5 +118,9 @@ class RuleController extends AbstractController
         return $this->json($rule, 200, [], [
             AbstractNormalizer::IGNORED_ATTRIBUTES => ['rules', 'username','password']
         ] );
+    }
+
+    public function convertTimeCallback($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) {
+        return $innerObject instanceof \DateTime ? $innerObject->format('H:i:s') : '';
     }
 }

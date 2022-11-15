@@ -4,7 +4,14 @@ import Home from './pages/Home'
 // Each route should map to a component.
 // We'll talk about nested routes later.
 const routes = [
-    { path: '/', component: Home }
+    {path: '/', name: 'home', component: Home},
+    {
+        path: '/server', name: 'server-parent', children: [
+            {path: '/add', name: 'server_add'},
+            {path: '/:id(\\d+)', name: 'server_edit'},
+        ]
+    }
+
 ]
 
 // 3. Create the router instance and pass the `routes` option

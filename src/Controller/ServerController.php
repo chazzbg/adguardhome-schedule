@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-#[Route('/api/server', name: 'api_server_')]
+#[Route('/api/server', name: 'api_server_', priority: 10)]
 class ServerController extends AbstractController
 {
     #[Route('', name: 'index', methods: ['GET'])]
@@ -23,7 +23,7 @@ class ServerController extends AbstractController
         $servers = $registry->getRepository(Server::class)->findAll();
 
         return $this->json($servers, 200, [], [
-            AbstractNormalizer::IGNORED_ATTRIBUTES => ['username', 'password']
+            AbstractNormalizer::IGNORED_ATTRIBUTES => ['username', 'password', 'rules']
         ]);
     }
 

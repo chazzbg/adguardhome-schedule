@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class IndexController extends AbstractController
 {
 
-    #[Route('/{path}', priority: 1, name: 'app_index')]
+    #[Route('/', name: 'app_index', priority: 1, methods: ['GET'])]
     public function index(AdGuardHomeClient $client, $path = ''): Response
     {
 
@@ -30,10 +30,4 @@ class IndexController extends AbstractController
         return $this->render('base.html.twig');
     }
 
-
-//    #[Route('/api', priority: 10, name: 'app_indesx')]
-//    public function api(): Response
-//    {
-//        return $this->json(['asd']);
-//    }
 }

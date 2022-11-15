@@ -7,6 +7,8 @@
         "@vue/babel-preset-jsx": "^1.4.0",
         "bootstrap": "5.2.2",
         "core-js": "^3.23.0",
+        "dayjs": "^1.11.6",
+        "lodash": "^4.17.21",
         "pinia": "^2.0.23",
         "regenerator-runtime": "^0.13.9",
         "sass": "^1.56.1",
@@ -26,5 +28,8 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
+    },
+    "dependencies": {
+        "axios": "^1.1.3"
     }
 }

@@ -1,9 +1,11 @@
 <script setup>
 
+import Navbar from './components/Navbar'
 </script>
 
 <template>
-  <div class="container-fluid ">
+  <Navbar/>
+  <div class="container ">
     <router-view></router-view>
   </div>
 </template>
