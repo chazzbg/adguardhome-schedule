@@ -7,8 +7,8 @@ class Base {
         })
     }
 
-    get(path) {
-        return this.client.get(path).then(response => {
+    get(path, params) {
+        return this.client.get(path, params).then(response => {
             return response.data
         }).catch(error => {
             throw error

@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ServerRepository::class)]
-#[UniqueEntity(fields: ['host','schema'])]
+#[UniqueEntity(['schema', 'host'], errorPath: 'host')]
 class Server
 {
     #[ORM\Id]
@@ -20,10 +20,10 @@ class Server
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(groups: ['create', 'update'])]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Hostname]
     private ?string $host = null;

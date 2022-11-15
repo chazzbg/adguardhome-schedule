@@ -1,7 +1,6 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
 import Home from './pages/Home'
 import ServerForm from './pages/ServerForm'
-import {h} from "vue";
 
 
 function prefixRoutes(prefix, routes) {
@@ -11,7 +10,7 @@ function prefixRoutes(prefix, routes) {
 const routes = [
     {path: '/', name: 'home', component: Home},
     {path: '/server/add', name: 'server_add', component: ServerForm},
-    {path: '/server/:id(\\d+)', name: 'server_edit', ServerForm},
+    {path: '/server/:id(\\d+)', name: 'server_edit', component: ServerForm},
     {path: '/rule/add', name: 'rule_add'},
     {path: '/rule/:id(\\d+)', name: 'rule_edit'},
 

@@ -8,12 +8,6 @@
     <div class="col-12" v-for=" (rule, k) in store.formattedRules" :key="rule.id">
       <div class="card ">
         <div  class="card-body d-flex flex-column flex-md-row align-items-top justify-content-start  justify-content-md-between">
-
-          <div class="d-flex flex-column align-items-start align-items-md-center mb-2 mb-md-0">
-            <small class="fw-semibold text-muted">Id</small>
-            <span>{{ rule.id }}</span>
-          </div>
-
           <div class="d-flex flex-column align-items-start align-items-md-center mb-2 mb-md-0">
             <small class="fw-semibold text-muted">Time</small>
             <span>{{ rule.time }}</span>
@@ -62,8 +56,8 @@
                 {{server.name}}
             </div>
           </div>
-          <div class="d-flex align-items-start align-items-md-center mb-2 mb-md-0 ">
-            <router-link :to="{name: 'rule_edit', params: {id: rule.id}}" class="btn btn-sm btn-primary me-2 flex-fill">
+          <div class="d-flex  mb-2 mb-md-0 flex-row flex-md-column">
+            <router-link :to="{name: 'rule_edit', params: {id: rule.id}}" class="btn btn-sm btn-primary me-2 flex-fill mb-0 mb-md-2">
               <i class="bi-pencil-square"></i> Edit
             </router-link>
             <button  class="btn btn-sm btn-danger me-2 flex-fill">
