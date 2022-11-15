@@ -1,22 +1,19 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
 import Home from './pages/Home'
-// 2. Define some routes
-// Each route should map to a component.
-// We'll talk about nested routes later.
+import ServerForm from './pages/ServerForm'
+import {h} from "vue";
+
+
+function prefixRoutes(prefix, routes) {
+    return routes.map(route => route.path = prefix + '/' + route.path)
+}
+
 const routes = [
     {path: '/', name: 'home', component: Home},
-    {
-        path: '/server', name: 'server-parent', children: [
-            {path: 'add', name: 'server_add'},
-            {path: ':id(\\d+)', name: 'server_edit'},
-        ]
-    },
-    {
-        path: '/rule', name: 'rule-parent', children: [
-            {path: 'add', name: 'rule_add'},
-            {path: ':id(\\d+)', name: 'rule_edit'},
-        ]
-    }
+    {path: '/server/add', name: 'server_add', component: ServerForm},
+    {path: '/server/:id(\\d+)', name: 'server_edit', ServerForm},
+    {path: '/rule/add', name: 'rule_add'},
+    {path: '/rule/:id(\\d+)', name: 'rule_edit'},
 
 ]
 

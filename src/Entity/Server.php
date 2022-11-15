@@ -61,7 +61,7 @@ class Server
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
@@ -73,7 +73,7 @@ class Server
         return $this->host;
     }
 
-    public function setHost(string $host): self
+    public function setHost(?string $host): self
     {
         $this->host = $host;
 
@@ -86,7 +86,7 @@ class Server
         return $this->schema;
     }
 
-    public function setSchema(string $schema): self
+    public function setSchema(?string $schema): self
     {
         $this->schema = $schema;
 
@@ -98,7 +98,7 @@ class Server
         return $this->skipSslVerify;
     }
 
-    public function setSkipSslVerify(bool $skipSslVerify): self
+    public function setSkipSslVerify(?bool $skipSslVerify): self
     {
         $this->skipSslVerify = $skipSslVerify;
 
@@ -110,7 +110,7 @@ class Server
         return $this->username;
     }
 
-    public function setUsername(string $username): self
+    public function setUsername(?string $username): self
     {
         $this->username = $username;
 
@@ -122,7 +122,7 @@ class Server
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 
