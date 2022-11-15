@@ -7,8 +7,14 @@ const routes = [
     {path: '/', name: 'home', component: Home},
     {
         path: '/server', name: 'server-parent', children: [
-            {path: '/add', name: 'server_add'},
-            {path: '/:id(\\d+)', name: 'server_edit'},
+            {path: 'add', name: 'server_add'},
+            {path: ':id(\\d+)', name: 'server_edit'},
+        ]
+    },
+    {
+        path: '/rule', name: 'rule-parent', children: [
+            {path: 'add', name: 'rule_add'},
+            {path: ':id(\\d+)', name: 'rule_edit'},
         ]
     }
 

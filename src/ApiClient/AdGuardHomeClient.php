@@ -115,4 +115,9 @@ class AdGuardHomeClient
 
         return null;
     }
+
+    public function services(): array
+    {
+        return $this->doGetRequest('/blocked_services/all')->toArray();
+    }
 }

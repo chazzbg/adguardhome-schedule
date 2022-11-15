@@ -6,6 +6,7 @@ use Ahc\Cron\Expression;
 use App\ApiClient\MultiClient;
 use App\Entity\Rule;
 use Doctrine\Persistence\ManagerRegistry;
+use Psr\Log\LoggerInterface;
 
 class ScheduleRunner
 {
@@ -19,7 +20,8 @@ class ScheduleRunner
         private readonly ExpressionCompiler  $compiler,
         private readonly ManagerRegistry $registry,
         private readonly MultiClient $client,
-        private readonly Tracer $tracer
+        private readonly Tracer $tracer,
+        private readonly LoggerInterface $logger
     ){
 
     }
@@ -28,12 +30,16 @@ class ScheduleRunner
     {
         $ruleRepo = $this->registry->getRepository(Rule::class);
         $rules = $ruleRepo->findActiveRules();
+        if(!$rules){
+            $this->logger->info('No Rules to be executed!');
+        }
 
         /** @var Rule $rule */
         foreach ($rules as $rule) {
             $this->client->setServers($rule->getServers());
             $cronExpr = $this->compiler->compile($rule);
-                if($force || !Expression::isDue($cronExpr, new \DateTime())){
+                if($force || Expression::isDue($cronExpr, new \DateTime())){
+                    $this->logger->info('Executing rule ID:'.$rule->getId());
                     try {
                         if (empty($rule->getClients())) {
                             $result = $this->client->blockServices($rule->getServices());
@@ -45,7 +51,7 @@ class ScheduleRunner
                         }
                         $this->tracer->trace($rule, $result);
                     } catch (\Exception $e) {
-
+                        $this->logger->error('Executing rule ID:'.$rule->getId(), $e->getTrace());
                         $this->tracer->trace($rule, [
                             'error'=> $e->getMessage()
                         ]);

@@ -6,27 +6,69 @@
 
   <div class="row" v-if="store.rules">
     <div class="col-12" v-for=" (rule, k) in store.formattedRules" :key="rule.id">
-      <div class="card">
-        <div
-            class="card-body d-flex flex-column flex-md-row align-items-center justify-content-center  justify-content-md-start">
-          <div class="d-flex flex-column align-items-center">
+      <div class="card ">
+        <div  class="card-body d-flex flex-column flex-md-row align-items-top justify-content-start  justify-content-md-between">
+
+          <div class="d-flex flex-column align-items-start align-items-md-center mb-2 mb-md-0">
             <small class="fw-semibold text-muted">Id</small>
             <span>{{ rule.id }}</span>
           </div>
 
-          <div class="d-flex flex-column align-items-center">
+          <div class="d-flex flex-column align-items-start align-items-md-center mb-2 mb-md-0">
             <small class="fw-semibold text-muted">Time</small>
             <span>{{ rule.time }}</span>
           </div>
 
-          <div class="d-flex flex-row">
-            <div class="d-flex flex-column align-items-center" v-for="(day, k) in rule.days" :key="k">
+          <div class="d-flex flex-row justify-content-start justify-content-md-center  mb-2 mb-md-0">
+            <div class="d-flex flex-column align-items-center px-1" v-for="(day, k) in rule.days" :key="k">
               <small class="fw-semibold text-muted">{{day.short}}</small>
-              <span :class="{'text-success' : day.checked, 'text-danger' : !day.checked}">{{
-                  day.checked ? 'X' : '*'
-                }}</span>
+              <span v-if="day.checked" class="text-success">
+                <i class="bi-check"></i>
+              </span>
+              <span v-else class="text-danger">
+                <i class="bi-x"></i>
+              </span>
+
+            </div>
+          </div>
+          <div class="d-flex flex-column align-items-start align-items-md-center  mb-2 mb-md-0">
+            <small class="fw-semibold text-muted">Blocked</small>
+
+            <span v-if="!rule.services" >
+              Unblock all
+            </span>
+            <div  v-else class="row g-0">
+              <div class="col" v-for="service in rule.services" :key="service">
+                  <service-icon  v-bind="decorateService(service)" />
+              </div>
             </div>
 
+          </div>
+
+          <div class="d-flex flex-column align-items-start align-items-md-center flex-shrink-0 mb-2 mb-md-0">
+            <small class="fw-semibold text-muted">Clients</small>
+            <div v-if="!rule.clients || !rule.clients.length">
+              Global
+            </div>
+            <div v-else>
+              <div v-for="client in rule.clients">
+                {{client}}
+              </div>
+            </div>
+          </div>
+          <div class="d-flex flex-column align-items-start align-items-md-center flex-shrink-0 mb-2 mb-md-0">
+            <small class="fw-semibold text-muted">Servers</small>
+            <div v-for="server in rule.servers">
+                {{server.name}}
+            </div>
+          </div>
+          <div class="d-flex align-items-start align-items-md-center mb-2 mb-md-0 ">
+            <router-link :to="{name: 'rule_edit', params: {id: rule.id}}" class="btn btn-sm btn-primary me-2 flex-fill">
+              <i class="bi-pencil-square"></i> Edit
+            </router-link>
+            <button  class="btn btn-sm btn-danger me-2 flex-fill">
+              <i class="bi-trash-fill"></i> Delete
+            </button>
           </div>
         </div>
       </div>
@@ -37,16 +79,29 @@
 <script setup>
 import {onMounted, reactive} from "vue";
 import {useRuleStore} from "../store/rule";
+import {useServiceStore} from "../store/service";
+import ServiceIcon from "./ServiceIcon";
 
 const store = useRuleStore()
+const serviceStore = useServiceStore();
 
 let state = reactive({
   running: true,
   error: ""
 })
 
-let ruleWeekdays = function (rule) {
+let decorateService = (service) => {
+  let stored = serviceStore.getService(service)
 
+  if (!stored) {
+    return null;
+  }
+
+  return  {
+    id: stored.id,
+    name: stored.name,
+    icon: stored.icon_svg
+  };
 }
 
 onMounted(async () => {

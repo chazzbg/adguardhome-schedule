@@ -4,11 +4,13 @@ namespace App\ApiClient;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * @method array status()
  * @method array clients()
+ * @method array services()
  * @method boolean blockServices(array $services)
  * @method boolean updateClient(string $name, array $services)
  */
@@ -23,7 +25,7 @@ class MultiClient
         $this->client = $client;
     }
 
-    public function setServers(Collection $servers)
+    public function setServers(Collection|array $servers)
     {
         $this->servers = $servers;
 

@@ -17,13 +17,18 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[Route('/api/rule', name: 'api_rule_', priority: 10)]
 class RuleController extends AbstractController
 {
+
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(ManagerRegistry $registry): Response
     {
         $servers = $registry->getRepository(Rule::class)->findAll();
 
         return $this->json($servers, 200, [], [
-            AbstractNormalizer::IGNORED_ATTRIBUTES => ['servers','traces'],
+//            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {
+////                dump($object, $format, $context);
+//                return $object->getName();
+//            },
+            AbstractNormalizer::IGNORED_ATTRIBUTES => ['rules','username','password','traces'],
             AbstractNormalizer::CALLBACKS => [
                 'time' => [$this,'convertTimeCallback'],
             ],
@@ -45,7 +50,7 @@ class RuleController extends AbstractController
     public function show(Rule $rule): JsonResponse
     {
         return $this->json($rule, 200, [], [
-            AbstractNormalizer::IGNORED_ATTRIBUTES => ['rules', 'username', 'password']
+            AbstractNormalizer::IGNORED_ATTRIBUTES => ['rules', 'username', 'password', 'traces']
         ]);
     }
 
@@ -89,7 +94,7 @@ class RuleController extends AbstractController
     ): JsonResponse {
         /** @var Rule $rule */
         $context = [
-            AbstractNormalizer::IGNORED_ATTRIBUTES => ['servers']
+            AbstractNormalizer::IGNORED_ATTRIBUTES => ['servers','traces']
         ];
 
         if ($rule) {
@@ -115,8 +120,9 @@ class RuleController extends AbstractController
         $manager = $registry->getManager();
         $manager->persist($rule);
         $manager->flush();
+
         return $this->json($rule, 200, [], [
-            AbstractNormalizer::IGNORED_ATTRIBUTES => ['rules', 'username','password']
+            AbstractNormalizer::IGNORED_ATTRIBUTES => ['rules', 'username','password', 'traces']
         ] );
     }
 

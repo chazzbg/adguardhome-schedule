@@ -5,6 +5,8 @@ namespace App\Command;
 use Ahc\Cron\Expression;
 use App\Service\ScheduleRunner;
 use Doctrine\Persistence\ManagerRegistry;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,11 +18,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class RunScheduleCommand extends Command
 {
-    private ScheduleRunner $runner;
 
-    public function __construct(ScheduleRunner $runner)
+    public function __construct( private LoggerInterface $logger , private ScheduleRunner $runner)
     {
-        $this->runner = $runner;
         parent::__construct();
     }
 
@@ -33,9 +33,9 @@ class RunScheduleCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-
+        $this->logger->info('Schedule has started');
         $this->runner->run($input->hasOption('dry-run'), $input->hasOption('force'));
-
+        $this->logger->info('Schedule has executed');
         return Command::SUCCESS;
     }
 }

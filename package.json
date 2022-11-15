@@ -6,6 +6,7 @@
         "@vue/babel-helper-vue-jsx-merge-props": "^1.4.0",
         "@vue/babel-preset-jsx": "^1.4.0",
         "bootstrap": "5.2.2",
+        "bootstrap-icons": "^1.10.2",
         "core-js": "^3.23.0",
         "dayjs": "^1.11.6",
         "lodash": "^4.17.21",
