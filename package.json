@@ -32,6 +32,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "@vuepic/vue-datepicker": "^3.5.3",
         "axios": "^1.1.3"
     }
 }

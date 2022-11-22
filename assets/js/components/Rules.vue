@@ -6,7 +6,7 @@
 
   <div class="row" v-if="store.rules">
     <div class="col-12" v-for=" (rule, k) in store.formattedRules" :key="rule.id">
-      <div class="card ">
+      <div class="card mb-2">
         <div  class="card-body d-flex flex-column flex-md-row align-items-top justify-content-start  justify-content-md-between">
           <div class="d-flex flex-column align-items-start align-items-md-center mb-2 mb-md-0">
             <small class="fw-semibold text-muted">Time</small>

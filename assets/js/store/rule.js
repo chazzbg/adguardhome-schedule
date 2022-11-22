@@ -9,6 +9,7 @@ export const useRuleStore = defineStore('rule', () => {
     const rules = ref([])
 
     const loadRules = async () => {
+
         rules.value = await api.rules.index()
     }
 

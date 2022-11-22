@@ -1,9 +1,11 @@
 import Base from "./base";
 
-class Rules extends Base {
+export default class Rules extends Base {
     async index() {
         return await this.get('/rule')
     }
-}
 
-export default Rules
+    async save(data){
+        return await this.post('/rule', data)
+    }
+}

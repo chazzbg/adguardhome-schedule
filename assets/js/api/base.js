@@ -1,6 +1,6 @@
 import axios from "axios";
 
-class Base {
+export default class Base {
     constructor() {
         this.client = axios.create({
             baseURL: '/api'
@@ -23,5 +23,3 @@ class Base {
         })
     }
 }
-
-export default Base

@@ -26,8 +26,11 @@ class IndexController extends AbstractController
 
         $client->setServer($host);
 
+        dump(date_default_timezone_get());
         $client->status();
-        return $this->render('base.html.twig');
+        return $this->render('base.html.twig', [
+            'timezone'=> date_default_timezone_get()
+        ]);
     }
 
 }

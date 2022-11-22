@@ -20,6 +20,7 @@ class Rule
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     #[Assert\NotBlank]
+    #[Assert\NotNull]
     private ?\DateTimeInterface $time = null;
 
     #[ORM\Column(nullable: true)]
@@ -53,6 +54,8 @@ class Rule
     private array $clients = [];
 
     #[ORM\ManyToMany(targetEntity: Server::class, inversedBy: 'rules')]
+    #[Assert\NotNull]
+    #[Assert\Count(min: 1, minMessage: "Select at least one server")]
     private Collection $servers;
 
     #[ORM\Column]
