@@ -72,7 +72,7 @@ Encore
 
     .enableVueLoader(() => {
     }, {
-        useJsx: true
+        runtimeCompilerBuild: false
     })
     .configureDefinePlugin((options) => {
 
