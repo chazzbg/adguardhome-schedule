@@ -18,7 +18,7 @@ server:
     env:
         - APP_RUNTIME: Baldinof\RoadRunnerBundle\Runtime\Runtime
 http:
-    address: '127.0.0.1:8080'
+    address: '0.0.0.0:8080'
     middleware:
         - gzip
         - static
@@ -56,11 +56,6 @@ logs:
         metrics:
             level: info
 
-kv:
-    local:
-        driver: memory
-        config:
-            interval: 60
 metrics:
     address: '0.0.0.0:2112'
 status:
