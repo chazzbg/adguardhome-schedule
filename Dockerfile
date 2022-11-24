@@ -1,4 +1,12 @@
-FROM yar
+FROM node:current-alpine as frontend
+WORKDIR /app
+
+RUN apk update && apk add yarn && mkdir public
+
+COPY assets assets
+COPY package.json yarn.lock webpack.config.js ./
+
+RUN yarn install && yarn build || cat yarn-error.log
 
 # Dockerfile
 FROM php:8.1-alpine
@@ -7,7 +15,7 @@ RUN apk add --no-cache autoconf openssl-dev g++ make pcre-dev icu-dev zlib-dev l
     docker-php-ext-install bcmath intl opcache zip sockets && \
     apk del --purge autoconf g++ make
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -19,11 +27,20 @@ RUN ./vendor/bin/rr get-binary --location /usr/local/bin
 
 COPY . .
 
-ENV APP_ENV=prod
+COPY --from=frontend /app/public/build /app/public/build
 
-RUN composer dump-autoload --optimize && \
-    composer check-platform-reqs && \
-    php bin/console cache:warmup
+ENV APP_ENV=prod \
+    APP_TZ=UTC \
+    DATABASE_FILE=/data/data.db
+
+VOLUME /data
+
+RUN chmod +x entrypoint.sh && \
+    composer dump-autoload --optimize && \
+    composer check-platform-reqs
+
+RUN ln -s  /app/entrypoint.sh /entrypoint.sh # backwards compat
+ENTRYPOINT ["ash","/app/entrypoint.sh"]
 
 EXPOSE 8080
 
