@@ -3,8 +3,8 @@ WORKDIR /app
 
 RUN apk update && apk add yarn && mkdir public
 
-COPY assets assets
 COPY package.json yarn.lock webpack.config.js ./
+COPY assets assets
 
 RUN yarn install && yarn build
 
