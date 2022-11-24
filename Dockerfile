@@ -6,7 +6,7 @@ RUN apk update && apk add yarn && mkdir public
 COPY assets assets
 COPY package.json yarn.lock webpack.config.js ./
 
-RUN yarn install && yarn build || cat yarn-error.log
+RUN yarn install && yarn build
 
 # Dockerfile
 FROM php:8.1-alpine
