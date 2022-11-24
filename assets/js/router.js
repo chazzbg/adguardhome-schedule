@@ -1,15 +1,12 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
 import Home from './pages/Home'
-import ServerForm from './pages/ServerForm'
-import RuleForm from './pages/RuleForm'
-
 
 const routes = [
     {path: '/', name: 'home', component: Home},
-    {path: '/server/add', name: 'server_add', component: ServerForm},
-    {path: '/server/:id(\\d+)', name: 'server_edit', component: ServerForm},
-    {path: '/rule/add', name: 'rule_add', component: RuleForm},
-    {path: '/rule/:id(\\d+)', name: 'rule_edit'},
+    {path: '/server/add', name: 'server_add', component: () => import('./pages/ServerForm')},
+    {path: '/server/:id(\\d+)', name: 'server_edit', component:  () => import('./pages/ServerForm')},
+    {path: '/rule/add', name: 'rule_add', component:  () => import('./pages/RuleForm')},
+    {path: '/rule/:id(\\d+)', name: 'rule_edit', component:  () => import('./pages/RuleForm')},
 ]
 
 // 3. Create the router instance and pass the `routes` option
