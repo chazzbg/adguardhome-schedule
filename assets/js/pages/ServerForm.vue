@@ -166,7 +166,7 @@ let submit = async () => {
 let loadServer = async (id) => {
     running.value = true
     try {
-      let remoteServer = await api.servers.show(id, true)
+      let remoteServer = await api.servers.show(id, {full: 1})
       serverId.value = remoteServer.id
       server.name = remoteServer.name
       server.host = remoteServer.host

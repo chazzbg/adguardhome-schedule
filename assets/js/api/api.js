@@ -1,11 +1,10 @@
-import Servers from "./servers";
-import Rules from "./rules";
 import Services from "./services";
 import Clients from "./clients";
+import Rest from "./rest";
 
 export const api = {
-    servers: new Servers(),
-    rules: new Rules(),
+    servers: new Rest('server'),
+    rules: new Rest('rule'),
     services: new Services(),
     clients: new Clients()
 }
