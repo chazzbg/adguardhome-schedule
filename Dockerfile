@@ -40,6 +40,11 @@ RUN chmod +x entrypoint.sh && \
     composer check-platform-reqs
 
 RUN ln -s  /app/entrypoint.sh /entrypoint.sh # backwards compat
+
+
+LABEL org.opencontainers.image.source=https://github.com/chazzbg/adguardhome-schedule
+
+
 ENTRYPOINT ["ash","/app/entrypoint.sh"]
 
 EXPOSE 8080
