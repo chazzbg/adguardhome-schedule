@@ -8,7 +8,7 @@ fi
 
 if [ -z "${APP_SECRET}" ]; then
   if [ ! -f "$SECRET_FILE" ]; then
-    ( < /dev/urandom tr -dc '[:alpha:]' | fold -w "${1:-32}" | head -n 1 ) > "$SECRET_FILE"
+    ( cat /dev/urandom | tr -dc '[:alpha:]' | fold -w "${1:-32}" | head -n 1 ) > "$SECRET_FILE"
   fi
   APP_SECRET=$( cat "$SECRET_FILE")
   export APP_SECRET
