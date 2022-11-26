@@ -26,8 +26,9 @@ class ScheduleRunner
 
     }
 
-    public function run($dryRun = true, $force = false)
+    public function run($force = false)
     {
+
         $ruleRepo = $this->registry->getRepository(Rule::class);
         $rules = $ruleRepo->findActiveRules();
         if(!$rules){
@@ -38,7 +39,7 @@ class ScheduleRunner
         foreach ($rules as $rule) {
             $this->client->setServers($rule->getServers());
             $cronExpr = $this->compiler->compile($rule);
-                if($force || Expression::isDue($cronExpr, new \DateTime())){
+            if($force || Expression::isDue($cronExpr, new \DateTime())){
                     $this->logger->info('Executing rule ID:'.$rule->getId());
                     try {
                         if (empty($rule->getClients())) {
@@ -46,7 +47,7 @@ class ScheduleRunner
                         } else {
                             $result = [];
                             foreach ($rule->getClients() as $client) {
-                                $result[$client] = $this->client->updateClient($client, $rule->getServices());
+                                $result[$client['name']] = $this->client->updateClient($client['name'], $rule->getServices());
                             }
                         }
                         $this->tracer->trace($rule, $result);
@@ -54,12 +55,14 @@ class ScheduleRunner
                         $this->logger->error('Executing rule ID:'.$rule->getId(), $e->getTrace());
                         $this->tracer->trace($rule, [
                             'error'=> $e->getMessage()
-                        ]);
+                        ], true);
                     }
                     $rule->setAppliedAt(new \DateTime());
-                    $ruleRepo->save($rule, true);
+                    $ruleRepo->save($rule);
                 }
         }
+
+        $this->registry->getManager()->flush();
 
     }
 }

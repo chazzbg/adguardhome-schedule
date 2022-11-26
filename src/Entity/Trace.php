@@ -33,6 +33,9 @@ class Trace
     #[ORM\Column]
     private array $result = [];
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $error = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -106,6 +109,18 @@ class Trace
     public function setResult(array $result): self
     {
         $this->result = $result;
+
+        return $this;
+    }
+
+    public function isError(): ?bool
+    {
+        return $this->error;
+    }
+
+    public function setError(?bool $error): self
+    {
+        $this->error = $error;
 
         return $this;
     }

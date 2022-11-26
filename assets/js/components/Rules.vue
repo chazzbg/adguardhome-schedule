@@ -7,7 +7,8 @@
   <div class="row" v-if="store.rules">
     <div class="col-12" v-for=" (rule, k) in store.formattedRules" :key="rule.id">
       <div class="card mb-2">
-        <div  class="card-body d-flex flex-column flex-md-row align-items-top justify-content-start  justify-content-md-between">
+        <div
+            class="card-body d-flex flex-column flex-md-row align-items-top justify-content-start  justify-content-md-between">
           <div class="d-flex flex-column align-items-start align-items-md-center mb-2 mb-md-0">
             <small class="fw-semibold text-muted">Time</small>
             <span>{{ rule.time }}</span>
@@ -15,7 +16,7 @@
 
           <div class="d-flex flex-row justify-content-start justify-content-md-center  mb-2 mb-md-0">
             <div class="d-flex flex-column align-items-center px-1" v-for="(day, k) in rule.days" :key="k">
-              <small class="fw-semibold text-muted">{{day.short}}</small>
+              <small class="fw-semibold text-muted">{{ day.short }}</small>
               <span v-if="day.checked" class="text-success">
                 <i class="bi-check"></i>
               </span>
@@ -28,12 +29,12 @@
           <div class="d-flex flex-column align-items-start align-items-md-center  mb-2 mb-md-0">
             <small class="fw-semibold text-muted">Blocked</small>
 
-            <span v-if="!rule.services" >
+            <span v-if="!rule.services || !rule.services.length">
               Unblock all
             </span>
-            <div  v-else class="row g-0">
+            <div v-else class="row g-0">
               <div class="col" v-for="service in rule.services" :key="service">
-                  <service-icon class="text-muted" v-bind="decorateService(service)" />
+                <service-icon class="text-muted" v-bind="decorateService(service)"/>
               </div>
             </div>
 
@@ -46,21 +47,22 @@
             </div>
             <div v-else>
               <div v-for="client in rule.clients">
-                {{client.name}}
+                {{ client.name }}
               </div>
             </div>
           </div>
           <div class="d-flex flex-column align-items-start align-items-md-center flex-shrink-0 mb-2 mb-md-0">
             <small class="fw-semibold text-muted">Servers</small>
             <div v-for="server in rule.servers">
-                {{server.name}}
+              {{ server.name }}
             </div>
           </div>
           <div class="d-flex  mb-2 mb-md-0 flex-row flex-md-column">
-            <router-link :to="{name: 'rule_edit', params: {id: rule.id}}" class="btn btn-sm btn-primary me-2 flex-fill mb-0 mb-md-2">
+            <router-link :to="{name: 'rule_edit', params: {id: rule.id}}"
+                         class="btn btn-sm btn-primary me-2 flex-fill mb-0 mb-md-2">
               <i class="bi-pencil-square"></i> Edit
             </router-link>
-            <button  class="btn btn-sm btn-danger me-2 flex-fill" @click="confirmDelete(rule.id)">
+            <button class="btn btn-sm btn-danger me-2 flex-fill" @click="confirmDelete(rule.id)">
               <i class="bi-trash-fill"></i> Delete
             </button>
           </div>
@@ -92,15 +94,15 @@ let decorateService = (service) => {
     return null;
   }
 
-  return  {
+  return {
     id: stored.id,
     name: stored.name,
     icon: stored.icon_svg
   };
 }
 
-let confirmDelete = (id) =>  {
-  if(window.confirm("Are you sure?")){
+let confirmDelete = (id) => {
+  if (window.confirm("Are you sure?")) {
     deleteRule(id)
   }
 }

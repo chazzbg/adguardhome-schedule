@@ -14,7 +14,7 @@ class Tracer
     {
     }
 
-    public function trace(Rule $rule, array $result)
+    public function trace(Rule $rule, array $result, bool $error = false)
     {
         /** @var TraceRepository $repo */
         $repo = $this->registry->getRepository(Trace::class);
@@ -29,8 +29,9 @@ class Tracer
                     return $server->getHost();
                 })->toArray()
             )
-            ->setResult($result);
+            ->setResult($result)
+        ->setError($error);
 
-        $repo->save($trace, true);
+        $repo->save($trace);
     }
 }

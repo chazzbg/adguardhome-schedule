@@ -19,23 +19,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 class RunScheduleCommand extends Command
 {
 
-    public function __construct( private LoggerInterface $logger , private ScheduleRunner $runner)
+    public function __construct(private readonly ScheduleRunner $runner)
     {
         parent::__construct();
     }
 
     protected function configure(): void
     {
-
-        $this->addOption('dry-run')
-            ->addOption('force');
+        $this->addOption('force');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->logger->info('Schedule has started');
-        $this->runner->run($input->hasOption('dry-run'), $input->hasOption('force'));
-        $this->logger->info('Schedule has executed');
+        $this->runner->run($input->getOption('force'));
         return Command::SUCCESS;
     }
 }
