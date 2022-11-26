@@ -59,7 +59,6 @@ class ServerController extends AbstractController
         Server $server,
         AdGuardHomeClient $client
     ) {
-        dump($server);
         return $this->saveRule($server, $request, $validator, $client, $registry);
     }
 

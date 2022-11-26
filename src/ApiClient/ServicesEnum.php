@@ -46,6 +46,7 @@ enum ServicesEnum: string
     const WHATSAPP = "whatsapp";
     const YOUTUBE = "youtube";
     const ZHIHU = "zhihu";
+    const MASTODON = "mastodon";
 
     const ALL = [
         self::YOUTUBE,
@@ -91,5 +92,6 @@ enum ServicesEnum: string
         self::WHATSAPP,
         self::YOUTUBE,
         self::ZHIHU,
+        self::MASTODON
     ];
 }

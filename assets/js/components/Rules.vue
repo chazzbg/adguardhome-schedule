@@ -33,7 +33,7 @@
             </span>
             <div  v-else class="row g-0">
               <div class="col" v-for="service in rule.services" :key="service">
-                  <service-icon  v-bind="decorateService(service)" />
+                  <service-icon class="text-muted" v-bind="decorateService(service)" />
               </div>
             </div>
 
@@ -46,7 +46,7 @@
             </div>
             <div v-else>
               <div v-for="client in rule.clients">
-                {{client}}
+                {{client.name}}
               </div>
             </div>
           </div>
@@ -60,7 +60,7 @@
             <router-link :to="{name: 'rule_edit', params: {id: rule.id}}" class="btn btn-sm btn-primary me-2 flex-fill mb-0 mb-md-2">
               <i class="bi-pencil-square"></i> Edit
             </router-link>
-            <button  class="btn btn-sm btn-danger me-2 flex-fill">
+            <button  class="btn btn-sm btn-danger me-2 flex-fill" @click="confirmDelete(rule.id)">
               <i class="bi-trash-fill"></i> Delete
             </button>
           </div>
@@ -75,6 +75,7 @@ import {onMounted, reactive} from "vue";
 import {useRuleStore} from "../store/rule";
 import {useServiceStore} from "../store/service";
 import ServiceIcon from "./ServiceIcon";
+import {api} from "../api/api";
 
 const store = useRuleStore()
 const serviceStore = useServiceStore();
@@ -98,6 +99,16 @@ let decorateService = (service) => {
   };
 }
 
+let confirmDelete = (id) =>  {
+  if(window.confirm("Are you sure?")){
+    deleteRule(id)
+  }
+}
+
+let deleteRule = async (id) => {
+  await api.rules.delete(id)
+  store.loadRules()
+}
 onMounted(async () => {
   try {
     await store.loadRules()

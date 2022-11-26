@@ -156,7 +156,9 @@ import {map} from "lodash/collection";
 import {each} from "lodash";
 import {api} from "../api/api";
 import router from "../router";
+import {useRoute} from "vue-router";
 
+const route = useRoute()
 
 const config = useConfigStore()
 const clients = useClientStore()
@@ -248,7 +250,12 @@ let submit = async () => {
       ...rule
     }
 
-    await api.rules.save(data)
+    if(ruleId.value){
+      await api.rules.update(ruleId.value, data)
+    } else {
+      await api.rules.save(data)
+    }
+
     router.push({name: 'home'})
   } catch (e) {
     let _errors = {}
@@ -265,8 +272,43 @@ let submit = async () => {
   }
 }
 
-onMounted(() => {
+
+
+let loadRoute = async (id) => {
   running.value = true
+  try {
+    let remoteRule = await api.rules.show(id)
+
+    ruleId.value = remoteRule.id;
+
+    console.log(remoteRule);
+    each(remoteRule, (value, key) => {
+      console.log(key,value);
+      if(rule.hasOwnProperty(key)){
+        rule[key] = value
+      }
+    })
+
+    rule.servers = remoteRule.servers.map( s => { return { id: s.id } })
+
+    let remoteTime  = dayjs(remoteRule.time)
+    time.value = {
+      hours: remoteTime.hour(),
+      minutes: remoteTime.minute()
+    }
+  } catch (e){
+    console.log(e)
+  } finally {
+    running.value  = false
+  }
+}
+
+
+
+onMounted(() => {
+  if(route.params && route.params.id){
+    loadRoute(route.params.id)
+  }  running.value = true
   Promise.all([clients.loadClients(), services.loadServices(), servers.loadServers()]).then(() => {
     running.value = false
   });
