@@ -44,6 +44,7 @@ RUN ln -s  /app/entrypoint.sh /entrypoint.sh # backwards compat
 
 LABEL org.opencontainers.image.source=https://github.com/chazzbg/adguardhome-schedule
 
+HEALTHCHECK CMD curl -f http://localhost:2114/health?plugin=http || exit 1
 
 ENTRYPOINT ["ash","/app/entrypoint.sh"]
 
