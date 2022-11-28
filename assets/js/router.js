@@ -7,6 +7,7 @@ const routes = [
     {path: '/server/:id(\\d+)', name: 'server_edit', component:  () => import('./pages/ServerForm')},
     {path: '/rule/add', name: 'rule_add', component:  () => import('./pages/RuleForm')},
     {path: '/rule/:id(\\d+)', name: 'rule_edit', component:  () => import('./pages/RuleForm')},
+    {path: '/history', name: 'history', component:  () => import('./pages/History')},
 ]
 
 // 3. Create the router instance and pass the `routes` option

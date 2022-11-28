@@ -127,6 +127,6 @@ class RuleController extends AbstractController
     }
 
     public function convertTimeCallback($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) {
-        return $innerObject instanceof \DateTime ? $innerObject->format('H:i:s') : '';
+        return $innerObject instanceof \DateTime ? $innerObject->format('H:i') : '';
     }
 }
