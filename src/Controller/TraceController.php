@@ -2,11 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\Rule;
 use App\Entity\Trace;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -15,19 +14,26 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 class TraceController extends AbstractController
 {
 
-    #[Route('/', name: 'index', methods: ['GET'])]
+    const RESULTS_LIMIT = 10;
+
+    #[Route('', name: 'index', methods: ['GET'])]
     public function index(ManagerRegistry $registry, Request $request)
     {
         $repo = $registry->getRepository(Trace::class);
 
-        $limit = 10;
-        $offset = ($request->get('page', 1) - 1) * $limit;
-        $traces = $repo->findBy([], ['createdAt' => 'DESC'], $limit, $offset);
+        $offset = ((int)$request->get('page', 1) - 1) * self::RESULTS_LIMIT;
+        $traces = $repo->findBy([], ['createdAt' => 'DESC'], self::RESULTS_LIMIT, $offset);
 
         return $this->json($traces, 200, [], [
             AbstractNormalizer::IGNORED_ATTRIBUTES => ['rule'],
-
         ]);
+    }
+
+    #[Route('/total', name: 'total', methods: ['GET'])]
+    public function total(ManagerRegistry $registry): JsonResponse
+    {
+        $repo = $registry->getRepository(Trace::class);
+        return $this->json(['total' => $repo->count([])]);
     }
 
 }

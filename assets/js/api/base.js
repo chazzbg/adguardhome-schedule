@@ -8,7 +8,7 @@ export default class Base {
     }
 
     get(path, params) {
-        return this.client.get(path, params).then(response => {
+        return this.client.get(path, {params}).then(response => {
             return response.data
         }).catch(error => {
             throw error
