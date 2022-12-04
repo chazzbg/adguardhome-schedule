@@ -10,6 +10,7 @@ class AdGuardHomeClient
 {
     private Server $server;
     private HttpClientInterface $client;
+    private $clients;
 
     public function __construct(HttpClientInterface $client)
     {
@@ -75,9 +76,15 @@ class AdGuardHomeClient
 
     public function clients(): array
     {
-        $response = $this->doGetRequest('/clients');
+        if(!$this->clients){
+            $this->clients = $this->doGetRequest('/clients')->toArray();
+        }
+        return $this->clients;
+    }
 
-        return $response->toArray();
+    public function listBlockedServices(): array
+    {
+        return $this->doGetRequest('/blocked_services/list')->toArray();
     }
 
     public function blockServices(array $services): bool
@@ -87,14 +94,8 @@ class AdGuardHomeClient
         return $response->getStatusCode() === 200;
     }
 
-    public function updateClient(string $name, array $services)
+    public function updateClient(string $name, array $data): bool
     {
-        $client = $this->getClient($name);
-        $data = $client;
-
-        $data['blocked_services'] = empty($services) ? null : $services;
-        $data['use_global_blocked_services'] = !$data['blocked_services'];
-
         $body = [
             'name' => $name,
             'data' => $data

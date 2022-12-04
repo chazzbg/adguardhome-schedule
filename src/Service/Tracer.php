@@ -21,6 +21,7 @@ class Tracer
 
         $trace = new  Trace();
         $trace->setCreatedAt(new \DateTime())
+            ->setAct($rule->getAct())
             ->setRule($rule)
             ->setServices($rule->getServices())
             ->setClients($rule->getClients())

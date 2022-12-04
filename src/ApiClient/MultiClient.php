@@ -10,9 +10,10 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /**
  * @method array status()
  * @method array clients()
+ * @method array getClient(string $name)
  * @method array services()
- * @method boolean blockServices(array $services)
- * @method boolean updateClient(string $name, array $services)
+ * @method array listBlockedServices()
+ * @method array blockServices(array $services)
  */
 class MultiClient
 {
@@ -42,6 +43,24 @@ class MultiClient
         /** @var AdGuardHomeClient $client */
         foreach ($this->clients as $client) {
             $response[$client->getServer()->getHost()] = $client->{$name}(...$arguments);
+        }
+
+        return $response;
+    }
+
+
+    public function updateClient(string $name, array $data): array
+    {
+
+        $response = [];
+
+        /** @var AdGuardHomeClient $client */
+        foreach ($this->clients as $client) {
+            $host = $client->getServer()->getHost();
+            $response[$host] = $client->updateClient(
+                $name,
+                $data[$host]
+            );
         }
 
         return $response;
