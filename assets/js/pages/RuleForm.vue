@@ -33,37 +33,57 @@
               {{ errors.time }}
             </div>
           </div>
+          <div class="mb-3">
+            <label for="action">Action</label>
+            <div>
+              <div class="btn-group" role="group" aria-label="Rule Action" >
+                <input type="radio" class="btn-check" name="rule_action" id="rule_action_block" autocomplete="off" value="block" v-model="rule.act" >
+                <label class="btn btn-outline-primary" for="rule_action_block" :class="{'border border-danger': errors.act}">Block</label>
+
+                <input type="radio" class="btn-check" name="rule_action" id="rule_action_unblock" autocomplete="off" value="unblock" v-model="rule.act" >
+                <label class="btn btn-outline-primary" for="rule_action_unblock" :class="{'border border-danger': errors.act}">Unblock</label>
+
+              </div>
+            </div>
+
+            <div class="form-text">
+              Select the action which the rule will apply.
+            </div>
+            <div class="text-danger" v-if="errors.act">
+              {{ errors.act }}
+            </div>
+          </div>
           <div class=" mb-3">
             <label for="days">Days</label>
-            <div class="d-flex flex-row justify-content-between">
-              <div v-for="d in days" :key="d.long" class=" flex-fill px-1">
+            <div class="d-flex flex-row justify-content-between btn-group">
+
+              <template v-for="d in days" :key="d.long" class=" flex-fill px-1">
                 <input type="checkbox" class="btn-check" :id="'day-check-'+d.long" autocomplete="off"
                        v-model="rule[d.long]">
-                <label class="btn btn-outline-primary d-block " :for="'day-check-'+d.long">{{
+                <label class="btn btn-outline-primary d-block " :for="'day-check-'+d.long" :class="{'border border-danger': errors[d.long]}">{{
                     d.short
                   }}</label>
-              </div>
+              </template>
             </div>
             <div class="form-text">
               Select days on which rule will be applied
             </div>
-            <div class="invalid-feedback">
-              {{ errors.time }}
+            <div class="text-danger" v-if="errors.monday">
+              {{ errors.monday }}
             </div>
           </div>
           <div class=" mb-3">
             <label for="clients">Clients</label>
             <div class="row">
-              <div class="col-4" v-for="client in clients.clients" :key="client.name">
-                <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" role="switch" :id="client.name"
+              <div class="col-4" v-for="(client, k) in clients.clients" :key="client.name">
+                <div class="mb-1">
+                  <input type="checkbox" class="btn-check" :id="'client-'+k" autocomplete="off"
                          v-model="rule.clients" :value="client">
-                  <label class="form-check-label" :for="client.name">
+                  <label class="btn btn-outline-primary d-block text-start" :for="'client-'+k">
                     {{ client.name }}<br/>
                     <small class="text-muted"> {{ client.ids.join(', ') }}</small>
                   </label>
                 </div>
-
               </div>
             </div>
 
@@ -88,7 +108,7 @@
                 <div class="mb-1">
                   <input type="checkbox" class="btn-check" :id="'service-check-'+service.id" autocomplete="off"
                          v-model="rule.services" :value="service.id">
-                  <label class="btn btn-outline-primary d-block text-start" :for="'service-check-'+service.id">
+                  <label class="btn btn-outline-primary d-block text-start" :for="'service-check-'+service.id" :class="{'border border-danger': errors.services}">
                     <service-icon v-bind="decorateService(service.id)" class="d-inline-block me-1"/>
                     {{ service.name }}
                   </label>
@@ -99,6 +119,9 @@
 
             <div class="form-text">
               Select services which should be disabled by the rule. Unselect all services if you want to enable all services.
+            </div>
+            <div class="text-danger" v-if="errors.services">
+              {{errors.services}}
             </div>
           </div>
           <div class="mb-3">
@@ -175,6 +198,7 @@ const time = ref({
 });
 
 const rule = reactive({
+  act: null,
   monday: false,
   tuesday: false,
   wednesday: false,
@@ -190,6 +214,7 @@ const rule = reactive({
 })
 
 let errors = ref({
+  act: null,
   time: null,
   monday: null,
   tuesday: null,
@@ -203,6 +228,7 @@ let errors = ref({
   servers: null,
   enabled: null
 })
+
 
 let days = computed(() => {
   let days = [];
@@ -240,7 +266,7 @@ let unselectAll = () => {
 
 let submit = async () => {
   running.value = true
-  errors.value = map(errors, (v, k) => {
+  errors.value = map(errors, () => {
     return null;
   })
 
@@ -259,7 +285,7 @@ let submit = async () => {
     router.push({name: 'home'})
   } catch (e) {
     let _errors = {}
-    each(e.response.data.violations, (v, k) => {
+    each(e.response.data.violations, (v) => {
       _errors[v.propertyPath] = v.title
     })
     errors.value = {

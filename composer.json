@@ -20,6 +20,7 @@
         "spiral/roadrunner": "^2.11",
         "spiral/roadrunner-metrics": "^2.0",
         "symfony/console": "6.1.*",
+        "symfony/expression-language": "6.1.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "6.1.*",
         "symfony/http-client": "6.1.*",

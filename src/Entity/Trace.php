@@ -36,6 +36,9 @@ class Trace
     #[ORM\Column(nullable: true)]
     private ?bool $error = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $act = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,6 +124,18 @@ class Trace
     public function setError(?bool $error): self
     {
         $this->error = $error;
+
+        return $this;
+    }
+
+    public function getAct(): ?string
+    {
+        return $this->act;
+    }
+
+    public function setAct(?string $act): self
+    {
+        $this->act = $act;
 
         return $this;
     }

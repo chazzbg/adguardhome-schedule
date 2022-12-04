@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\ApiClient\ServicesEnum;
+use App\Enums\RuleAction;
 use App\Repository\RuleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -23,24 +24,31 @@ class Rule
     #[Assert\NotNull]
     private ?\DateTimeInterface $time = null;
 
+    #[Assert\Expression("this.isDayOfWeek() == true", message: "Select at least one day of week")]
     #[ORM\Column(nullable: true)]
     private ?bool $monday = null;
 
+    #[Assert\Expression("this.isDayOfWeek() == true", message: "Select at least one day of week")]
     #[ORM\Column(nullable: true)]
     private ?bool $tuesday = null;
 
+    #[Assert\Expression("this.isDayOfWeek() == true", message: "Select at least one day of week")]
     #[ORM\Column(nullable: true)]
     private ?bool $wednesday = null;
 
+    #[Assert\Expression("this.isDayOfWeek() == true", message: "Select at least one day of week")]
     #[ORM\Column(nullable: true)]
     private ?bool $thursday = null;
 
+    #[Assert\Expression("this.isDayOfWeek() == true", message: "Select at least one day of week")]
     #[ORM\Column(nullable: true)]
     private ?bool $friday = null;
 
+    #[Assert\Expression("this.isDayOfWeek() == true", message: "Select at least one day of week")]
     #[ORM\Column(nullable: true)]
     private ?bool $saturday = null;
 
+    #[Assert\Expression("this.isDayOfWeek() == true", message: "Select at least one day of week")]
     #[ORM\Column(nullable: true)]
     private ?bool $sunday = null;
 
@@ -48,6 +56,7 @@ class Rule
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
     #[Assert\Choice(choices: ServicesEnum::ALL, multiple: true)]
+    #[Assert\NotBlank]
     private array $services = [];
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
@@ -66,6 +75,11 @@ class Rule
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $appliedAt = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotNull(message: "Please select rule action.")]
+    #[Assert\Choice(options: [RuleAction::ACTION_BLOCK, RuleAction::ACTION_UNBLOCK])]
+    private ?string $act = null;
 
     public function __construct()
     {
@@ -174,6 +188,10 @@ class Rule
         return $this;
     }
 
+    public function isDayOfWeek(): bool
+    {
+        return $this->monday || $this->tuesday || $this->wednesday || $this->thursday ||  $this->friday || $this->saturday || $this->sunday;
+    }
 
     public function getServices(): array
     {
@@ -273,6 +291,18 @@ class Rule
     public function setAppliedAt(?\DateTimeInterface $appliedAt): self
     {
         $this->appliedAt = $appliedAt;
+
+        return $this;
+    }
+
+    public function getAct(): ?string
+    {
+        return $this->act;
+    }
+
+    public function setAct(?string $act): self
+    {
+        $this->act = $act;
 
         return $this;
     }
