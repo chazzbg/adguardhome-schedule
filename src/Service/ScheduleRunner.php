@@ -101,9 +101,9 @@ class ScheduleRunner
             foreach ($hostClient as $host => $client) {
                 $toApply = [];
                 if($rule->getAct() == RuleAction::ACTION_BLOCK){
-                    $toApply = array_merge($client['blocked_services'], $rule->getServices());
+                    $toApply = array_merge($client['blocked_services'] ?? [], $rule->getServices());
                 } elseif($rule->getAct() == RuleAction::ACTION_UNBLOCK) {
-                    $toApply = array_diff($client['blocked_services'], $rule->getServices());
+                    $toApply = array_diff($client['blocked_services'] ?? [], $rule->getServices());
                 }
                 $client['blocked_services'] = $toApply;
                 $client['use_global_blocked_services'] = !$client['blocked_services'];
