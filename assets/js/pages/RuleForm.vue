@@ -16,43 +16,47 @@
             </div>
 
           </div>
-          <div class=" mb-3">
+          <div class="row">
+            <div class="col">
+              <div class=" mb-3">
 
-            <label for="name">Time</label>
-            <datepicker v-model="time" timePicker :class="{'is-invalid': errors.time}">
-              <template #action-preview="{ value }">
-                {{ config.getTimezone() }}
-              </template>
-            </datepicker>
+                <label for="name">Block at</label>
+                <datepicker v-model="blockAt" timePicker :class="{'is-invalid': errors.blockAt}">
+                  <template #action-preview="{ value }">
+                    {{ config.getTimezone() }}
+                  </template>
+                </datepicker>
 
 
-            <div class="form-text">
-              Select the time of the day at which the rule will be applied
-            </div>
-            <div class="invalid-feedback">
-              {{ errors.time }}
-            </div>
-          </div>
-          <div class="mb-3">
-            <label for="action">Action</label>
-            <div>
-              <div class="btn-group" role="group" aria-label="Rule Action" >
-                <input type="radio" class="btn-check" name="rule_action" id="rule_action_block" autocomplete="off" value="block" v-model="rule.act" >
-                <label class="btn btn-outline-primary" for="rule_action_block" :class="{'border border-danger': errors.act}">Block</label>
-
-                <input type="radio" class="btn-check" name="rule_action" id="rule_action_unblock" autocomplete="off" value="unblock" v-model="rule.act" >
-                <label class="btn btn-outline-primary" for="rule_action_unblock" :class="{'border border-danger': errors.act}">Unblock</label>
-
+                <div class="form-text">
+                  Select the time of the day at which the rule will block the services
+                </div>
+                <div class="invalid-feedback">
+                  {{ errors.blockAt }}
+                </div>
               </div>
             </div>
+            <div class="col">
+              <div class=" mb-3">
 
-            <div class="form-text">
-              Select the action which the rule will apply.
-            </div>
-            <div class="text-danger" v-if="errors.act">
-              {{ errors.act }}
+                <label for="name">Unblock at</label>
+                <datepicker v-model="unblockAt" timePicker :class="{'is-invalid': errors.unblockAt}">
+                  <template #action-preview="{ value }">
+                    {{ config.getTimezone() }}
+                  </template>
+                </datepicker>
+
+
+                <div class="form-text">
+                  Select the time of the day at which the rule will unblock the services
+                </div>
+                <div class="invalid-feedback">
+                  {{ errors.unblockAt }}
+                </div>
+              </div>
             </div>
           </div>
+
           <div class=" mb-3">
             <label for="days">Days</label>
             <div class="d-flex flex-row justify-content-between btn-group">
@@ -78,7 +82,7 @@
               <div class="col-4" v-for="(client, k) in clients.clients" :key="client.name">
                 <div class="mb-1">
                   <input type="checkbox" class="btn-check" :id="'client-'+k" autocomplete="off"
-                         v-model="rule.clients" :value="client">
+                         v-model="rule.clients" :value="clients.getClient(client.name).name">
                   <label class="btn btn-outline-primary d-block text-start" :for="'client-'+k">
                     {{ client.name }}<br/>
                     <small class="text-muted"> {{ client.ids.join(', ') }}</small>
@@ -192,13 +196,16 @@ const running = ref(false)
 const ruleId = ref(null)
 dayjs.extend(weekday)
 
-const time = ref({
+const blockAt = ref({
+  hours: new Date().getHours(),
+  minutes: 0
+});
+const unblockAt = ref({
   hours: new Date().getHours(),
   minutes: 0
 });
 
 const rule = reactive({
-  act: null,
   monday: false,
   tuesday: false,
   wednesday: false,
@@ -210,12 +217,11 @@ const rule = reactive({
   services: [],
   servers: [],
   enabled: true
-
 })
 
 let errors = ref({
-  act: null,
-  time: null,
+  blockAt: null,
+  unblockAt: null,
   monday: null,
   tuesday: null,
   wednesday: null,
@@ -272,7 +278,8 @@ let submit = async () => {
 
   try {
     let data = {
-      time: `${time.value.hours}:${String(time.value.minutes).padStart(2, '0')}`,
+      blockAt: `${blockAt.value.hours}:${String(blockAt.value.minutes).padStart(2, '0')}`,
+      unblockAt: `${unblockAt.value.hours}:${String(unblockAt.value.minutes).padStart(2, '0')}`,
       ...rule
     }
 
@@ -307,9 +314,7 @@ let loadRoute = async (id) => {
 
     ruleId.value = remoteRule.id;
 
-    console.log(remoteRule);
     each(remoteRule, (value, key) => {
-      console.log(key,value);
       if(rule.hasOwnProperty(key)){
         rule[key] = value
       }
@@ -317,11 +322,14 @@ let loadRoute = async (id) => {
 
     rule.servers = remoteRule.servers.map( s => { return { id: s.id } })
 
-    let remoteTime  = dayjs(remoteRule.time)
-    time.value = {
-      hours: remoteTime.hour(),
-      minutes: remoteTime.minute()
+    let decorateTimes = function (time) {
+      return {
+        hours: time.hour(),
+        minutes: time.minute()
+      }
     }
+    blockAt.value = decorateTimes(dayjs(remoteRule.blockAt))
+    unblockAt.value = decorateTimes(dayjs(remoteRule.unblockAt))
   } catch (e){
     console.log(e)
   } finally {

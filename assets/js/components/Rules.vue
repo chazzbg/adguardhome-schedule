@@ -10,8 +10,11 @@
         <div
             class="card-body d-flex flex-column flex-md-row align-items-top justify-content-start  justify-content-md-between">
           <div class="d-flex flex-column align-items-start align-items-md-center mb-2 mb-md-0">
-            <small class="fw-semibold text-muted">Time</small>
-            <span>{{ rule.time }}</span>
+            <small class="fw-semibold text-muted">Block at</small>
+            <span>{{ rule.blockAt }}</span>
+          </div> <div class="d-flex flex-column align-items-start align-items-md-center mb-2 mb-md-0">
+            <small class="fw-semibold text-muted">Unblock at</small>
+            <span>{{ rule.unblockAt }}</span>
           </div>
 
           <div class="d-flex flex-row justify-content-start justify-content-md-center  mb-2 mb-md-0">
@@ -47,7 +50,7 @@
             </div>
             <div v-else>
               <div v-for="client in rule.clients">
-                {{ client.name }}
+                {{ client }}
               </div>
             </div>
           </div>

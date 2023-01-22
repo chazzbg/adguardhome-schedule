@@ -24,13 +24,10 @@ class RuleController extends AbstractController
         $servers = $registry->getRepository(Rule::class)->findAll();
 
         return $this->json($servers, 200, [], [
-//            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {
-////                dump($object, $format, $context);
-//                return $object->getName();
-//            },
             AbstractNormalizer::IGNORED_ATTRIBUTES => ['rules','username','password','traces'],
             AbstractNormalizer::CALLBACKS => [
-                'time' => [$this,'convertTimeCallback'],
+                'blockAt' => [$this,'convertTimeCallback'],
+                'unblockAt' => [$this,'convertTimeCallback'],
             ],
         ]);
     }
@@ -126,7 +123,7 @@ class RuleController extends AbstractController
         ] );
     }
 
-    public function convertTimeCallback($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) {
-        return $innerObject instanceof \DateTime ? $innerObject->format('H:i') : '';
+    public function convertTimeCallback($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) {;
+        return $innerObject instanceof \DateTimeInterface ? $innerObject->format('H:i') : '';
     }
 }

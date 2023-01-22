@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\ApiClient\ServicesEnum;
-use App\Enums\RuleAction;
 use App\Repository\RuleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -18,11 +17,6 @@ class Rule
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
-    #[Assert\NotBlank]
-    #[Assert\NotNull]
-    private ?\DateTimeInterface $time = null;
 
     #[Assert\Expression("this.isDayOfWeek() == true", message: "Select at least one day of week")]
     #[ORM\Column(nullable: true)]
@@ -76,10 +70,15 @@ class Rule
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $appliedAt = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotNull(message: "Please select rule action.")]
-    #[Assert\Choice(options: [RuleAction::ACTION_BLOCK, RuleAction::ACTION_UNBLOCK])]
-    private ?string $act = null;
+    #[ORM\Column(type: Types::TIME_IMMUTABLE, nullable: true)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    private ?\DateTimeImmutable $blockAt = null;
+
+    #[ORM\Column(type: Types::TIME_IMMUTABLE, nullable: true)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    private ?\DateTimeImmutable $unblockAt = null;
 
     public function __construct()
     {
@@ -90,18 +89,6 @@ class Rule
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getTime(): ?\DateTimeInterface
-    {
-        return $this->time;
-    }
-
-    public function setTime(\DateTimeInterface $time): self
-    {
-        $this->time = $time;
-
-        return $this;
     }
 
     public function isMonday(): ?bool
@@ -295,14 +282,25 @@ class Rule
         return $this;
     }
 
-    public function getAct(): ?string
+    public function getBlockAt(): ?\DateTimeImmutable
     {
-        return $this->act;
+        return $this->blockAt;
     }
 
-    public function setAct(?string $act): self
+    public function setBlockAt(\DateTimeImmutable $blockAt): self
     {
-        $this->act = $act;
+        $this->blockAt = $blockAt;
+        return $this;
+    }
+
+    public function getUnblockAt(): ?\DateTimeImmutable
+    {
+        return $this->unblockAt;
+    }
+
+    public function setUnblockAt(\DateTimeImmutable $unblockAt): self
+    {
+        $this->unblockAt = $unblockAt;
 
         return $this;
     }
