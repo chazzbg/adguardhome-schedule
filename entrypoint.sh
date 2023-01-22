@@ -7,8 +7,8 @@ if [ ! -w "$(dirname "$DATABASE_FILE")" ]; then
 fi
 
 if [ -z "${APP_SECRET}" ]; then
-  if [ ! -f "$SECRET_FILE" ]; then
-    ( cat /dev/urandom | tr -dc '[:alpha:]' | fold -w "${1:-32}" | head -n 1 ) > "$SECRET_FILE"
+  if [ ! -f  ${SECRET_FILE} ]; then
+    ( < /dev/urandom tr -dc '[:alpha:]' | fold -w 32 | head -n 1 ) > ${SECRET_FILE}
   fi
   APP_SECRET=$( cat "$SECRET_FILE")
   export APP_SECRET
@@ -28,7 +28,7 @@ if [ ! -f "$DATABASE_FILE" ]; then
 fi
 
 if ! php bin/console doctrine:schema:validate --quiet; then
-  php bin/console doctrine:schema:update --force
+  php bin/console doctrine:schema:update --force --complete
 fi
 
 exec "$@"
