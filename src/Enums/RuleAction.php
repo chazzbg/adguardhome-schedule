@@ -2,8 +2,8 @@
 
 namespace App\Enums;
 
-class RuleAction
+enum RuleAction
 {
-    public const ACTION_BLOCK = 'block';
-    public const ACTION_UNBLOCK = 'unblock';
+    case ACTION_BLOCK;
+    case ACTION_UNBLOCK;
 }

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Rule;
+use App\Enums\RuleAction;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

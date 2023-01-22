@@ -26,12 +26,13 @@ class RunScheduleCommand extends Command
 
     protected function configure(): void
     {
-        $this->addOption('force');
+        $this->addOption('force-block')
+        ->addOption('force-unblock');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->runner->run($input->getOption('force'));
+        $this->runner->run($input->getOption('force-block'), $input->getOption('force-unblock'));
         return Command::SUCCESS;
     }
 }

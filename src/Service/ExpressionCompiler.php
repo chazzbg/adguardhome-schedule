@@ -3,11 +3,12 @@
 namespace App\Service;
 
 use App\Entity\Rule;
+use App\Enums\RuleAction;
 
 class ExpressionCompiler
 {
 
-    public function compile(Rule $rule)
+    public function compile(Rule $rule, RuleAction $action): string
     {
         $days = [
             'Monday',
@@ -18,14 +19,20 @@ class ExpressionCompiler
             'Saturday',
             'Sunday'
         ];
-        $minute = (int)$rule->getTime()->format('i');
-        $hour = (int)$rule->getTime()->format('H');
+
+        $time = match ($action) {
+            RuleAction::ACTION_BLOCK => $rule->getBlockAt(),
+            RuleAction::ACTION_UNBLOCK => $rule->getUnblockAt(),
+        };
+
+        $minute = (int)$time->format('i');
+        $hour = (int)$time->format('H');
         $dom = '*';
         $month = '*';
         $dow = [];
         foreach ($days as $k => $day) {
-            if($rule->{'is'.$day}()){
-                $dow[] = $k;
+            if ($rule->{'is' . $day}()) {
+                $dow[] = $k + 1;
             }
         }
         $dow = implode(',', $dow);
@@ -33,6 +40,5 @@ class ExpressionCompiler
         $values = [$minute, $hour, $dom, $month, $dow];
 
         return implode(' ', $values);
-
     }
 }
